@@ -14,8 +14,8 @@ export const registerUser = (data: any) => {
   });
 };
 
-export const login = () => {
-  fetch("https://api-nodejs-todolist.herokuapp.com/user/login", {
+export const login = async () => {
+  const res = await fetch("https://api-nodejs-todolist.herokuapp.com/user/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -25,4 +25,18 @@ export const login = () => {
       password: "1234567",
     }),
   });
+
+  return res.json();
+};
+
+export const getUser = async (token: string | null) => {
+  const res = await fetch("https://api-nodejs-todolist.herokuapp.com/user/me", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+  });
+
+  return res.json();
 };

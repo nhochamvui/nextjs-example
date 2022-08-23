@@ -1,15 +1,27 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { NextPage } from "next";
-import { login, registerUser } from "./api";
+import { getUser, login, registerUser } from "./api";
 
 const Fetching: NextPage = () => {
   const queryClient = useQueryClient();
+  const refreshToken = localStorage.getItem("token");
+  const {
+    isLoading: isLoging,
+    isError: isLoginError,
+    data: loginInfo,
+    error: loginError,
+  } = useQuery(["user"], login, {
+    enabled: !refreshToken
+  });
+
   const {
     isLoading,
     isError,
-    data,
+    data: userInfo,
     error,
-  } = useQuery(["user"], login);
+  } = useQuery(["user"], () => getUser(refreshToken), {
+    enabled: refreshToken !== null,
+  });
   
 
 //   const registerUserMutation = useMutation(registerUser, {
@@ -23,19 +35,12 @@ const Fetching: NextPage = () => {
     return <span>Loading...</span>;
   }
 
-  if (isError) {
-    return <span>Error</span>;
-  }
-  else{
-    return <span>{data}</span>
-  }
-
   return (
     <>
       <h1>Fetch Data with React Query</h1>
 
-      (data && <h2></h2>)
-      <button
+      {userInfo && <h2>Hello {userInfo.user.name}!</h2>}
+      {/* <button
         onClick={() => {
           mutation.mutate({
             email: "hoangtho@gmail.com",
@@ -44,7 +49,7 @@ const Fetching: NextPage = () => {
         }}
       >
         Login
-      </button>
+      </button> */}
     </>
   );
 };
