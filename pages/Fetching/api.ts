@@ -40,3 +40,38 @@ export const getUser = async (token: string | null) => {
 
   return res.json();
 };
+
+export const getAllTasks = async (token: string | null) => {
+  const res = await fetch("https://api-nodejs-todolist.herokuapp.com/task", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+  });
+
+  return res.json();
+};
+
+export const addTask = async ({token, data}: {token: string | null, data: any}) => {
+  const res = await fetch("https://api-nodejs-todolist.herokuapp.com/task", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify(data),
+  });
+  return res.json();
+};
+
+export const delTask = async ({token, id}: {token: string | null, id: number}) => {
+  const res = await fetch(`https://api-nodejs-todolist.herokuapp.com/task/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+  });
+  return res.json();
+};
