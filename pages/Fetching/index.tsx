@@ -4,23 +4,20 @@ import { getUser, login, registerUser } from "./api";
 
 const Fetching: NextPage = () => {
   const queryClient = useQueryClient();
-  const refreshToken = localStorage.getItem("token");
   const {
     isLoading: isLoging,
     isError: isLoginError,
     data: loginInfo,
     error: loginError,
-  } = useQuery(["user"], login, {
-    enabled: !refreshToken
-  });
+  } = useQuery(["user"], login);
 
   const {
     isLoading,
     isError,
-    data: userInfo,
+    data: user,
     error,
-  } = useQuery(["user"], () => getUser(refreshToken), {
-    enabled: refreshToken !== null,
+  } = useQuery(["userInfo"], () => getUser(loginInfo.token), {
+    enabled: loginInfo !== null,
   });
   
 
@@ -39,7 +36,7 @@ const Fetching: NextPage = () => {
     <>
       <h1>Fetch Data with React Query</h1>
 
-      {userInfo && <h2>Hello {userInfo.user.name}!</h2>}
+      {user && <h2>Hello {user.name}!</h2>}
       {/* <button
         onClick={() => {
           mutation.mutate({
